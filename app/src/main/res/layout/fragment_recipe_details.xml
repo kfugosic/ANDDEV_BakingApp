@@ -2,13 +2,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/lightBackground">
+
+
+    <TextView
+        android:id="@+id/tv_recipe_ingredients"
+        android:background="@color/white"
+        android:padding="12dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="22sp"
+        android:text="@string/ingredients"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/lightBackground"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_recipe_steps"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/lightBackground">
+        android:layout_height="match_parent">
     </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>

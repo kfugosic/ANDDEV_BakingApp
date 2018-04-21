@@ -1,5 +1,6 @@
 package com.kfugosic.bakingapp.recyclerviews;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.kfugosic.bakingapp.R;
+import com.kfugosic.bakingapp.RecipeDetailsActivity;
 import com.kfugosic.bakingapp.models.Step;
 
 import java.util.List;
@@ -20,8 +22,10 @@ import butterknife.ButterKnife;
 
 public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.StepViewHolder>{
 
+    private int selectedPos = RecyclerView.NO_POSITION;
     private RecipeStepClickListener mRecipeStepClickListener;
     private List<Step> mSteps;
+
 
     public RecipeStepsAdapter(RecipeStepClickListener recipeStepClickListener, List<Step> steps) {
         this.mRecipeStepClickListener = recipeStepClickListener;
@@ -37,9 +41,10 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
 
 
     @Override
-    public void onBindViewHolder(StepViewHolder holder, int position) {
+    public void onBindViewHolder(StepViewHolder viewHolder, int position) {
         Step current = mSteps.get(position);
-        holder.setRecipeText(current.getShortDescription());
+        viewHolder.setRecipeText(current.getShortDescription());
+        viewHolder.recipeStepTextView.setBackgroundColor(selectedPos == position ? RecipeDetailsActivity.SELECTED_COLOR : Color.WHITE);
     }
 
     @Override
@@ -68,7 +73,16 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
         public void onClick(View view) {
             int position = getAdapterPosition();
             mRecipeStepClickListener.onListItemClick(position);
+            notifyItemChanged(selectedPos);
+            selectedPos = getLayoutPosition();
+            notifyItemChanged(selectedPos);
         }
+    }
+
+    public void deselectAll() {
+        notifyItemChanged(selectedPos);
+        selectedPos = RecyclerView.NO_POSITION;
+        notifyItemChanged(selectedPos);
     }
 
 }

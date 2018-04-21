@@ -24,6 +24,9 @@
         <activity android:name="com.kfugosic.bakingapp.StepDetailsActivity"
             android:parentActivityName="com.kfugosic.bakingapp.RecipeDetailsActivity">
         </activity>
+        <activity android:name="com.kfugosic.bakingapp.IngredientsActivity"
+            android:parentActivityName="com.kfugosic.bakingapp.RecipeDetailsActivity">
+        </activity>
     </application>
 
 </manifest>

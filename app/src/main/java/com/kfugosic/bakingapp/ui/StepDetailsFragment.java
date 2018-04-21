@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.kfugosic.bakingapp.R;
 import com.kfugosic.bakingapp.models.Step;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -24,12 +26,16 @@ import butterknife.OnClick;
 
 public class StepDetailsFragment extends Fragment {
 
+    private static final String STEPS_LIST = "steps_list";
+    public static final String STEP_INDEX = "step_index";
+
     @BindView(R.id.tv_step_desc) protected TextView mStepDescription;
     @BindView(R.id.btn_previous) protected Button mPreviousButton;
     @BindView(R.id.btn_next) protected Button mNextButton;
 
     private Integer mIndex;
     private ArrayList<Step> mSteps;
+    private boolean showButtons = true;
 
     public StepDetailsFragment() {
     }
@@ -40,6 +46,11 @@ public class StepDetailsFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_step_details, container, false);
         ButterKnife.bind(this, rootView);
 
+        if(savedInstanceState != null) {
+            mIndex = savedInstanceState.getInt(STEP_INDEX);
+            mSteps = Parcels.unwrap(savedInstanceState.getParcelable(STEPS_LIST));
+        }
+
         if(mIndex != null && mSteps != null) {
             refreshFragment();
         }
@@ -49,6 +60,12 @@ public class StepDetailsFragment extends Fragment {
 
     private void refreshFragment() {
         mStepDescription.setText(mSteps.get(mIndex).getDescription());
+        if(showButtons) {
+            refreshButtons();
+        }
+    }
+
+    private void refreshButtons() {
         mNextButton.setVisibility(View.VISIBLE);
         mPreviousButton.setVisibility(View.VISIBLE);
         if(mIndex == (mSteps.size() - 1)) {
@@ -57,11 +74,6 @@ public class StepDetailsFragment extends Fragment {
         if(mIndex == 0) {
             mPreviousButton.setVisibility(View.GONE);
         }
-    }
-
-    public void initializeFragmentData(ArrayList<Step> steps, int index) {
-        mSteps = steps;
-        mIndex = index;
     }
 
     @OnClick(R.id.btn_previous)
@@ -76,4 +88,18 @@ public class StepDetailsFragment extends Fragment {
         refreshFragment();
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(STEP_INDEX, mIndex);
+        outState.putParcelable(STEPS_LIST, Parcels.wrap(mSteps));
+    }
+
+    public void initializeFragmentData(ArrayList<Step> steps, int index) {
+        mSteps = steps;
+        mIndex = index;
+    }
+
+    public void setShowButtons(boolean showButtons) {
+        this.showButtons = showButtons;
+    }
 }

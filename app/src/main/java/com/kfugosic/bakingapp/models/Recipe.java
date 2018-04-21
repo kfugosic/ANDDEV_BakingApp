@@ -1,21 +1,22 @@
 package com.kfugosic.bakingapp.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import org.parceler.Parcel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Kristijan on 20-Apr-18.
  */
 
-public class Recipe implements Parcelable {
+@Parcel
+public class Recipe {
 
-    private int id;
-    private String name;
-    private List<Ingredient> ingredients;
-    private List<Step> steps;
+    int id;
+    String name;
+    List<Ingredient> ingredients;
+    List<Step> steps;
+
+    Recipe() {}
 
     public Recipe(int id, String name, List<Ingredient> ingredients, List<Step> steps) {
         this.id = id;
@@ -60,56 +61,4 @@ public class Recipe implements Parcelable {
         ingredients.add(ingredient);
     }
 
-    protected Recipe(Parcel in) {
-        id = in.readInt();
-        name = in.readString();
-        if (in.readByte() == 0x01) {
-            ingredients = new ArrayList<Ingredient>();
-            in.readList(ingredients, Ingredient.class.getClassLoader());
-        } else {
-            ingredients = null;
-        }
-        if (in.readByte() == 0x01) {
-            steps = new ArrayList<Step>();
-            in.readList(steps, Step.class.getClassLoader());
-        } else {
-            steps = null;
-        }
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(name);
-        if (ingredients == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(ingredients);
-        }
-        if (steps == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(steps);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<Recipe> CREATOR = new Parcelable.Creator<Recipe>() {
-        @Override
-        public Recipe createFromParcel(Parcel in) {
-            return new Recipe(in);
-        }
-
-        @Override
-        public Recipe[] newArray(int size) {
-            return new Recipe[size];
-        }
-    };
 }

@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import com.kfugosic.bakingapp.models.Step;
 import com.kfugosic.bakingapp.ui.StepDetailsFragment;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 
 import butterknife.ButterKnife;
@@ -23,35 +25,18 @@ public class StepDetailsActivity extends AppCompatActivity {
             return;
         }
         int index = getIntent().getIntExtra(RecipeDetailsActivity.CURRENT_STEP_INDEX_KEY, -1);
-        ArrayList<Step> steps = getIntent().getParcelableArrayListExtra(RecipeDetailsActivity.ALL_STEPS_KEY);
+        ArrayList<Step> steps = Parcels.unwrap(getIntent().getParcelableExtra(RecipeDetailsActivity.ALL_STEPS_KEY));
 
-        StepDetailsFragment stepDetailsFragment = new StepDetailsFragment();
-        stepDetailsFragment.initializeFragmentData(steps, index);
+        if(savedInstanceState == null) {
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .add(R.id.step_details_container, stepDetailsFragment)
-                .commit();
+            StepDetailsFragment stepDetailsFragment = new StepDetailsFragment();
+            stepDetailsFragment.initializeFragmentData(steps, index);
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .add(R.id.step_details_container, stepDetailsFragment)
+                    .commit();
+        }
     }
-
-//    @OnClick(R.id.btn_previous)
-//    protected void showPrevious() {
-//        Intent intent = new Intent(this, StepDetailsActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-//        intent.putParcelableArrayListExtra(RecipeDetailsActivity.ALL_STEPS_KEY, mSteps);
-//        intent.putExtra(RecipeDetailsActivity.CURRENT_STEP_INDEX_KEY, mIndex - 1);
-//        startActivity(intent);
-//        finish();
-//    }
-//
-//    @OnClick(R.id.btn_next)
-//    protected void showNext() {
-//        Intent intent = new Intent(this, StepDetailsActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-//        intent.putParcelableArrayListExtra(RecipeDetailsActivity.ALL_STEPS_KEY, mSteps);
-//        intent.putExtra(RecipeDetailsActivity.CURRENT_STEP_INDEX_KEY, mIndex + 1);
-//        startActivity(intent);
-//        finish();
-//    }
 
 }

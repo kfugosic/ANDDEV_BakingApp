@@ -8,6 +8,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
@@ -17,6 +18,8 @@ import com.kfugosic.bakingapp.recyclerviews.RecipeCardAdapter;
 import com.kfugosic.bakingapp.recyclerviews.RecipeCardClickListener;
 import com.kfugosic.bakingapp.utils.JsonParseUtils;
 import com.kfugosic.bakingapp.utils.NetworkUtils;
+
+import org.parceler.Parcels;
 
 import java.io.IOException;
 import java.net.URL;
@@ -32,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardClickLi
     public static final String RECIPE_KEY = "recipe";
     private static final String KEY_INSTANCE_STATE_RV_POSITION = "rv_position";
     private static final int RECIPES_LIST_LOADER = 101;
+    private static final int TABLET_VIEW_NUMBER_OF_COLUMNS = 3;
 
     private Parcelable mLayoutManagerState;
 
@@ -41,7 +45,12 @@ public class MainActivity extends AppCompatActivity implements RecipeCardClickLi
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager layoutManager = null;
+        if(getResources().getBoolean(R.bool.isTablet)) {
+            layoutManager = new GridLayoutManager(this, TABLET_VIEW_NUMBER_OF_COLUMNS);
+        } else {
+            layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        }
         mRecipesList.setLayoutManager(layoutManager);
         mRecipesList.setHasFixedSize(true);
         RecipeCardAdapter adapter = new RecipeCardAdapter(this, null);
@@ -62,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardClickLi
     @Override
     public void onListItemClick(Recipe clickedRecipe) {
         Intent intent = new Intent(this, RecipeDetailsActivity.class);
-        intent.putExtra(RECIPE_KEY, clickedRecipe);
+        intent.putExtra(RECIPE_KEY, Parcels.wrap(clickedRecipe));
         startActivity(intent);
     }
 
@@ -152,4 +161,5 @@ public class MainActivity extends AppCompatActivity implements RecipeCardClickLi
     @Override
     public void onLoaderReset(Loader<List<Recipe>> loader) {
     }
+
 }
