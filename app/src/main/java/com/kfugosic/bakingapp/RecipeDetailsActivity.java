@@ -59,13 +59,6 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeSt
         mSteps = (ArrayList<Step>) selectedRecipe.getSteps();
         mIngredients = buildIngredientsSummary(selectedRecipe.getIngredients());
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mRecipeSteps.setLayoutManager(layoutManager);
-        mRecipeSteps.setHasFixedSize(true);
-        mRecipeSteps.setItemAnimator(null);
-        mAdapter = new RecipeStepsAdapter(this, mSteps);
-        mRecipeSteps.setAdapter(mAdapter);
-
         if(savedInstanceState != null) {
             mLayoutManagerState = savedInstanceState.getParcelable(INSTANCE_STATE_RV_POSITION_KEY);
         }
@@ -85,13 +78,21 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeSt
             mTwoPane = false;
         }
 
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mRecipeSteps.setLayoutManager(layoutManager);
+        mRecipeSteps.setHasFixedSize(true);
+        mRecipeSteps.setItemAnimator(null);
+        mAdapter = new RecipeStepsAdapter(this, mSteps, mTwoPane);
+        mRecipeSteps.setAdapter(mAdapter);
+
+
     }
 
     @OnClick(R.id.tv_recipe_ingredients)
     public void onIngredientsTextViewClick() {
         mAdapter.deselectAll();
-        mRecipeIngredients.setBackgroundColor(SELECTED_COLOR);
         if(mTwoPane) {
+            mRecipeIngredients.setBackgroundColor(SELECTED_COLOR);
             IngredientsFragment ingredientsFragment = new IngredientsFragment();
             ingredientsFragment.setIngredientsSummary(mIngredients);
 
@@ -113,8 +114,8 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeSt
      */
     @Override
     public void onListItemClick(int clickedStepIndex) {
-        mRecipeIngredients.setBackgroundColor(Color.WHITE);
         if(mTwoPane) {
+            mRecipeIngredients.setBackgroundColor(Color.WHITE);
             StepDetailsFragment stepDetailsFragment = new StepDetailsFragment();
             stepDetailsFragment.initializeFragmentData(mSteps, clickedStepIndex);
             stepDetailsFragment.setShowButtons(false);

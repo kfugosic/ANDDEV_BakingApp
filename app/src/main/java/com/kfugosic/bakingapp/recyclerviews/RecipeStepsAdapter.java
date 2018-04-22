@@ -25,11 +25,13 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
     private int selectedPos = RecyclerView.NO_POSITION;
     private RecipeStepClickListener mRecipeStepClickListener;
     private List<Step> mSteps;
+    private boolean mTwoPane;
 
 
-    public RecipeStepsAdapter(RecipeStepClickListener recipeStepClickListener, List<Step> steps) {
+    public RecipeStepsAdapter(RecipeStepClickListener recipeStepClickListener, List<Step> steps, boolean mTwoPane) {
         this.mRecipeStepClickListener = recipeStepClickListener;
         this.mSteps = steps;
+        this.mTwoPane = mTwoPane;
     }
 
     @Override
@@ -44,7 +46,9 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
     public void onBindViewHolder(StepViewHolder viewHolder, int position) {
         Step current = mSteps.get(position);
         viewHolder.setRecipeText(current.getShortDescription());
-        viewHolder.recipeStepTextView.setBackgroundColor(selectedPos == position ? RecipeDetailsActivity.SELECTED_COLOR : Color.WHITE);
+        if (mTwoPane) {
+            viewHolder.recipeStepTextView.setBackgroundColor(selectedPos == position ? RecipeDetailsActivity.SELECTED_COLOR : Color.WHITE);
+        }
     }
 
     @Override

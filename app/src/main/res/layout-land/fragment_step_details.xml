@@ -1,52 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:weightSum="5"
+        android:fillViewport="true"
         android:layout_above="@id/button_container">
 
-
-        <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-            android:id="@+id/media_player_view"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-            android:visibility="gone">
-        </com.google.android.exoplayer2.ui.SimpleExoPlayerView>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/iv_thumbnail"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:visibility="gone"
-            android:layout_weight="2"
-            android:contentDescription="@string/thumbnail">
-        </ImageView>
+            <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+                android:id="@+id/media_player_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:resize_mode="fill"
+                android:visibility="gone">
+            </com.google.android.exoplayer2.ui.SimpleExoPlayerView>
 
+            <ImageView
+                android:id="@+id/iv_thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:visibility="gone"
+                android:contentDescription="@string/thumbnail">
+            </ImageView>
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3">
+            <TextView
+                android:id="@+id/tv_step_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:padding="4dp"
+                android:shadowRadius="2"
+                android:textSize="20sp"/>
 
-                <TextView
-                    android:id="@+id/tv_step_desc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:padding="4dp"
-                    android:shadowRadius="2"
-                    android:textSize="20sp" />
-
-        </ScrollView>
-    </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 
     <LinearLayout
