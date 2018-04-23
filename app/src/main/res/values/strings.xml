@@ -4,4 +4,6 @@
     <string name="next">NEXT</string>
     <string name="ingredients">Ingredients</string>
     <string name="thumbnail">Thumbnail</string>
+    <string name="appwidget_default_text">NO RECIPE SELECTED</string>
+    <string name="add_widget">Add widget</string>
 </resources>

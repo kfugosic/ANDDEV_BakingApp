@@ -2,14 +2,18 @@ package com.kfugosic.bakingapp;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import com.kfugosic.bakingapp.ui.IngredientsFragment;
+import com.kfugosic.bakingapp.utils.AppUtils;
 
 import butterknife.ButterKnife;
 
 public class IngredientsActivity extends AppCompatActivity {
 
+    private static final String ACTIVITY_TITLE = "Ingredients";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,7 +23,9 @@ public class IngredientsActivity extends AppCompatActivity {
         if(getIntent() == null){
             return;
         }
-        String ingredients = getIntent().getStringExtra(RecipeDetailsActivity.INGREDIENTS_KEY);
+
+        setTitle(ACTIVITY_TITLE);
+        String ingredients = getIntent().getStringExtra(AppUtils.INGREDIENTS_KEY);
 
         if(savedInstanceState == null) {
 
@@ -33,4 +39,12 @@ public class IngredientsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.equals(android.R.id.home)) {
+            NavUtils.navigateUpFromSameTask(this);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.kfugosic.bakingapp.models.Step;
 import com.kfugosic.bakingapp.ui.StepDetailsFragment;
+import com.kfugosic.bakingapp.utils.AppUtils;
 
 import org.parceler.Parcels;
 
@@ -24,8 +25,10 @@ public class StepDetailsActivity extends AppCompatActivity {
         if(getIntent() == null){
             return;
         }
-        int index = getIntent().getIntExtra(RecipeDetailsActivity.CURRENT_STEP_INDEX_KEY, -1);
-        ArrayList<Step> steps = Parcels.unwrap(getIntent().getParcelableExtra(RecipeDetailsActivity.ALL_STEPS_KEY));
+        int index = getIntent().getIntExtra(AppUtils.CURRENT_STEP_INDEX_KEY, -1);
+        ArrayList<Step> steps = Parcels.unwrap(getIntent().getParcelableExtra(AppUtils.ALL_STEPS_KEY));
+
+        setTitle(steps.get(index).getShortDescription());
 
         if(savedInstanceState == null) {
 

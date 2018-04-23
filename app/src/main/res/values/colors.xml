@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#452712</color>
     <color name="colorAccent">#FF4081</color>
     <color name="lightBackground">#cec1b6</color>
+    <color name="selectedItemInRV">#F7F4EB</color>
     <color name="white">#ffffff</color>
 
 </resources>

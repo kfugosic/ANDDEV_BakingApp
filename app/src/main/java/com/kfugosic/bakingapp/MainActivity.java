@@ -1,6 +1,8 @@
 package com.kfugosic.bakingapp;
 
 import android.annotation.SuppressLint;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 import com.kfugosic.bakingapp.models.Recipe;
 import com.kfugosic.bakingapp.recyclerviews.RecipeCardAdapter;
 import com.kfugosic.bakingapp.recyclerviews.RecipeCardClickListener;
+import com.kfugosic.bakingapp.utils.AppUtils;
 import com.kfugosic.bakingapp.utils.JsonParseUtils;
 import com.kfugosic.bakingapp.utils.NetworkUtils;
 
@@ -30,14 +33,14 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements RecipeCardClickListener, LoaderManager.LoaderCallbacks<List<Recipe>> {
 
-    @BindView(R.id.rv_recipes) protected RecyclerView mRecipesList;
+    @BindView(R.id.rv_recipes) protected RecyclerView mRecipesRecyclerView;
 
-    public static final String RECIPE_KEY = "recipe";
-    private static final String KEY_INSTANCE_STATE_RV_POSITION = "rv_position";
+    private static final String SAVED_RV_POSITION_KEY = "rv_position";
     private static final int RECIPES_LIST_LOADER = 101;
     private static final int TABLET_VIEW_NUMBER_OF_COLUMNS = 3;
 
     private Parcelable mLayoutManagerState;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +54,13 @@ public class MainActivity extends AppCompatActivity implements RecipeCardClickLi
         } else {
             layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         }
-        mRecipesList.setLayoutManager(layoutManager);
-        mRecipesList.setHasFixedSize(true);
+        mRecipesRecyclerView.setLayoutManager(layoutManager);
+        mRecipesRecyclerView.setHasFixedSize(true);
         RecipeCardAdapter adapter = new RecipeCardAdapter(this, null);
-        mRecipesList.setAdapter(adapter);
+        mRecipesRecyclerView.setAdapter(adapter);
 
         if(savedInstanceState != null) {
-            mLayoutManagerState = savedInstanceState.getParcelable(KEY_INSTANCE_STATE_RV_POSITION);
+            mLayoutManagerState = savedInstanceState.getParcelable(SAVED_RV_POSITION_KEY);
         }
 
         fillAdapter();
@@ -70,8 +73,15 @@ public class MainActivity extends AppCompatActivity implements RecipeCardClickLi
      */
     @Override
     public void onListItemClick(Recipe clickedRecipe) {
+        IngredientsWidgetProvider.setRecipe(clickedRecipe);
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+        IngredientsWidgetProvider.updateAppWidgets(
+                this,
+                appWidgetManager,
+                appWidgetManager.getAppWidgetIds(new ComponentName(this, IngredientsWidgetProvider.class))
+                );
         Intent intent = new Intent(this, RecipeDetailsActivity.class);
-        intent.putExtra(RECIPE_KEY, Parcels.wrap(clickedRecipe));
+        intent.putExtra(AppUtils.RECIPE_KEY, Parcels.wrap(clickedRecipe));
         startActivity(intent);
     }
 
@@ -83,12 +93,12 @@ public class MainActivity extends AppCompatActivity implements RecipeCardClickLi
     @Override
     protected void onPause() {
         super.onPause();
-        mLayoutManagerState = mRecipesList.getLayoutManager().onSaveInstanceState();
+        mLayoutManagerState = mRecipesRecyclerView.getLayoutManager().onSaveInstanceState();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(KEY_INSTANCE_STATE_RV_POSITION, mLayoutManagerState);
+        outState.putParcelable(SAVED_RV_POSITION_KEY, mLayoutManagerState);
         super.onSaveInstanceState(outState);
     }
 
@@ -98,7 +108,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCardClickLi
      * Fill the recycler view (recipes list) adapter
      */
     private void fillAdapter() {
-
         LoaderManager loaderManager = getSupportLoaderManager();
         Loader<String> recipesListLoader = loaderManager.getLoader(RECIPES_LIST_LOADER);
         if(recipesListLoader == null) {
@@ -150,16 +159,20 @@ public class MainActivity extends AppCompatActivity implements RecipeCardClickLi
             Toast.makeText(this, "Recipes data not available!", Toast.LENGTH_SHORT).show();
             return;
         }
-        RecipeCardAdapter adapter = new RecipeCardAdapter(this, recipes);
-        mRecipesList.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-        if(mLayoutManagerState != null) {
-            mRecipesList.getLayoutManager().onRestoreInstanceState(mLayoutManagerState);
-        }
+        initializeRecyclerView(recipes);
     }
 
     @Override
     public void onLoaderReset(Loader<List<Recipe>> loader) {
     }
 
+
+    private void initializeRecyclerView(List<Recipe> recipes) {
+        RecipeCardAdapter adapter = new RecipeCardAdapter(this, recipes);
+        mRecipesRecyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        if(mLayoutManagerState != null) {
+            mRecipesRecyclerView.getLayoutManager().onRestoreInstanceState(mLayoutManagerState);
+        }
+    }
 }

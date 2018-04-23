@@ -1,0 +1,46 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lightBackground"
+    android:padding="@dimen/widget_margin">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="5">
+
+        <TextView
+            android:id="@+id/appwidget_header"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_margin="8dp"
+            android:layout_gravity="center"
+            android:background="@color/lightBackground"
+            android:contentDescription="@string/appwidget_default_text"
+            android:text="@string/appwidget_default_text"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/widget_header_font_size"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/white"/>
+
+        <TextView
+            android:id="@+id/appwidget_text"
+            android:layout_weight="4"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="8dp"
+            android:background="@color/lightBackground"
+            android:contentDescription="@string/appwidget_default_text"
+            android:text="@string/appwidget_default_text"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/widget_body_font_size" />
+
+    </LinearLayout>
+
+</RelativeLayout>

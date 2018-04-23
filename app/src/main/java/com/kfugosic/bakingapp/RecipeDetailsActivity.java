@@ -10,18 +10,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
-import com.kfugosic.bakingapp.models.Ingredient;
 import com.kfugosic.bakingapp.models.Recipe;
 import com.kfugosic.bakingapp.models.Step;
 import com.kfugosic.bakingapp.recyclerviews.RecipeStepClickListener;
 import com.kfugosic.bakingapp.recyclerviews.RecipeStepsAdapter;
 import com.kfugosic.bakingapp.ui.IngredientsFragment;
 import com.kfugosic.bakingapp.ui.StepDetailsFragment;
+import com.kfugosic.bakingapp.utils.AppUtils;
 
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,11 +32,6 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeSt
     @BindView(R.id.tv_recipe_ingredients) protected TextView mRecipeIngredients;
 
     private static final String INSTANCE_STATE_RV_POSITION_KEY = "rv_steps_position";
-    public static final String ALL_STEPS_KEY = "step";
-    public static final String CURRENT_STEP_INDEX_KEY = "step_index";
-    public static final String INGREDIENTS_KEY = "ingredients";
-
-    public static final int SELECTED_COLOR = Color.parseColor("#F7F4EB");
 
     private Parcelable mLayoutManagerState;
     private ArrayList<Step> mSteps;
@@ -52,12 +46,14 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeSt
         setContentView(R.layout.activity_recipe_details);
         ButterKnife.bind(this);
 
-        Recipe selectedRecipe = Parcels.unwrap(getIntent().getParcelableExtra(MainActivity.RECIPE_KEY));
+        Recipe selectedRecipe = Parcels.unwrap(getIntent().getParcelableExtra(AppUtils.RECIPE_KEY));
         if(selectedRecipe == null) {
             return;
         }
+
+        setTitle(selectedRecipe.getName());
         mSteps = (ArrayList<Step>) selectedRecipe.getSteps();
-        mIngredients = buildIngredientsSummary(selectedRecipe.getIngredients());
+        mIngredients = AppUtils.buildIngredientsSummary(selectedRecipe.getIngredients());
 
         if(savedInstanceState != null) {
             mLayoutManagerState = savedInstanceState.getParcelable(INSTANCE_STATE_RV_POSITION_KEY);
@@ -85,14 +81,13 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeSt
         mAdapter = new RecipeStepsAdapter(this, mSteps, mTwoPane);
         mRecipeSteps.setAdapter(mAdapter);
 
-
     }
 
     @OnClick(R.id.tv_recipe_ingredients)
     public void onIngredientsTextViewClick() {
         mAdapter.deselectAll();
         if(mTwoPane) {
-            mRecipeIngredients.setBackgroundColor(SELECTED_COLOR);
+            mRecipeIngredients.setBackgroundColor(AppUtils.SELECTED_COLOR);
             IngredientsFragment ingredientsFragment = new IngredientsFragment();
             ingredientsFragment.setIngredientsSummary(mIngredients);
 
@@ -104,7 +99,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeSt
             return;
         }
         Intent intent = new Intent(this, IngredientsActivity.class);
-        intent.putExtra(INGREDIENTS_KEY, mIngredients);
+        intent.putExtra(AppUtils.INGREDIENTS_KEY, mIngredients);
         startActivity(intent);
     }
 
@@ -127,8 +122,8 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeSt
             return;
         }
         Intent intent = new Intent(this, StepDetailsActivity.class);
-        intent.putExtra(ALL_STEPS_KEY, Parcels.wrap(mSteps));
-        intent.putExtra(CURRENT_STEP_INDEX_KEY, clickedStepIndex);
+        intent.putExtra(AppUtils.ALL_STEPS_KEY, Parcels.wrap(mSteps));
+        intent.putExtra(AppUtils.CURRENT_STEP_INDEX_KEY, clickedStepIndex);
         startActivity(intent);
     }
 
@@ -148,15 +143,4 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeSt
         super.onSaveInstanceState(outState);
     }
 
-
-    //
-    // Build ingredients preview string from list
-    //
-    private String buildIngredientsSummary(List<Ingredient> ingredients) {
-        StringBuilder sb = new StringBuilder();
-        for (Ingredient ingredient : ingredients) {
-            sb.append(String.format("%s %s of %s%n", ingredient.getQuantity(), ingredient.getMeasure(), ingredient.getName()));
-        }
-        return sb.toString();
-    }
 }

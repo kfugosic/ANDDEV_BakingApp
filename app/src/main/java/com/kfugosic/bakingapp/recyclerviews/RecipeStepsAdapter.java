@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.kfugosic.bakingapp.R;
-import com.kfugosic.bakingapp.RecipeDetailsActivity;
 import com.kfugosic.bakingapp.models.Step;
+import com.kfugosic.bakingapp.utils.AppUtils;
 
 import java.util.List;
 
@@ -47,7 +47,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
         Step current = mSteps.get(position);
         viewHolder.setRecipeText(current.getShortDescription());
         if (mTwoPane) {
-            viewHolder.recipeStepTextView.setBackgroundColor(selectedPos == position ? RecipeDetailsActivity.SELECTED_COLOR : Color.WHITE);
+            viewHolder.recipeStepTextView.setBackgroundColor(selectedPos == position ? AppUtils.SELECTED_COLOR : Color.WHITE);
         }
     }
 
