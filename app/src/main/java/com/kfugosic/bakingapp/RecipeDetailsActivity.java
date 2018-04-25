@@ -68,6 +68,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeSt
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction()
                         .add(R.id.step_details_container, ingredientsFragment)
+                        .addToBackStack("recipe")
                         .commit();
             }
         } else {

@@ -55,7 +55,6 @@ public class IngredientsWidgetProvider extends AppWidgetProvider {
 
             Intent ingridientsIntent = new Intent(context, IngredientsActivity.class);
             ingridientsIntent.putExtra(AppUtils.INGREDIENTS_KEY, widgetText);
-            ingridientsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
             TaskStackBuilder stackBuilder = TaskStackBuilder
                     .create(context)
