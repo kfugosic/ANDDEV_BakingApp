@@ -34,8 +34,8 @@ public class IngredientsActivity extends AppCompatActivity {
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
-                    .add(R.id.ingredients_container, ingredientsFragment)
                     .addToBackStack("ingr")
+                    .add(R.id.ingredients_container, ingredientsFragment)
                     .commit();
         }
     }
