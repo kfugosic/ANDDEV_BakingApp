@@ -20,17 +20,17 @@
         </activity>
         <activity
             android:name=".RecipeDetailsActivity"
-            android:launchMode="singleTop"
+            android:launchMode="standard"
             android:parentActivityName=".MainActivity">
         </activity>
         <activity
             android:name=".StepDetailsActivity"
-            android:launchMode="singleTop"
+            android:launchMode="standard"
             android:parentActivityName=".RecipeDetailsActivity">
         </activity>
         <activity
             android:name=".IngredientsActivity"
-            android:launchMode="singleTop"
+            android:launchMode="standard"
             android:parentActivityName=".RecipeDetailsActivity">
         </activity>
 

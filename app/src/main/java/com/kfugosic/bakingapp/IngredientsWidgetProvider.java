@@ -1,6 +1,7 @@
 package com.kfugosic.bakingapp;
 
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
@@ -48,12 +49,20 @@ public class IngredientsWidgetProvider extends AppWidgetProvider {
         } else {
             headerText = currentRecipe.getName();
             widgetText = AppUtils.buildIngredientsSummary(currentRecipe.getIngredients());
-            Intent intent = new Intent(context, RecipeDetailsActivity.class);
-            intent.putExtra(AppUtils.RECIPE_KEY, Parcels.wrap(currentRecipe));
-            pendingIntentHeader = PendingIntent.getActivity(context, 0, intent, 0);
-            intent = new Intent(context, IngredientsActivity.class);
-            intent.putExtra(AppUtils.INGREDIENTS_KEY, widgetText);
-            pendingIntentBody = PendingIntent.getActivity(context, 0, intent, 0);
+            Intent recipeIntent = new Intent(context, RecipeDetailsActivity.class);
+            recipeIntent.putExtra(AppUtils.RECIPE_KEY, Parcels.wrap(currentRecipe));
+            pendingIntentHeader = PendingIntent.getActivity(context, currentRecipe.getId(), recipeIntent, 0);
+
+            Intent ingridientsIntent = new Intent(context, IngredientsActivity.class);
+            ingridientsIntent.putExtra(AppUtils.INGREDIENTS_KEY, widgetText);
+            ingridientsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+            TaskStackBuilder stackBuilder = TaskStackBuilder
+                    .create(context)
+                    .addNextIntentWithParentStack(recipeIntent)
+                    .addNextIntent(ingridientsIntent);
+            //pendingIntentBody = PendingIntent.getActivity(context, currentRecipe.getId(), intent, 0);
+            pendingIntentBody = stackBuilder.getPendingIntent(currentRecipe.getId(), 0);
         }
         views.setTextViewText(R.id.appwidget_header, headerText);
         views.setTextViewText(R.id.appwidget_text, widgetText);
