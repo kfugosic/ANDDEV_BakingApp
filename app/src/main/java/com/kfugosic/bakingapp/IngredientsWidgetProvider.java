@@ -62,7 +62,7 @@ public class IngredientsWidgetProvider extends AppWidgetProvider {
                     .addNextIntentWithParentStack(recipeIntent)
                     .addNextIntent(ingridientsIntent);
             //pendingIntentBody = PendingIntent.getActivity(context, currentRecipe.getId(), intent, 0);
-            pendingIntentBody = stackBuilder.getPendingIntent(currentRecipe.getId(), 0);
+            pendingIntentBody = stackBuilder.getPendingIntent(currentRecipe.getId(), PendingIntent.FLAG_UPDATE_CURRENT);
         }
         views.setTextViewText(R.id.appwidget_header, headerText);
         views.setTextViewText(R.id.appwidget_text, widgetText);
