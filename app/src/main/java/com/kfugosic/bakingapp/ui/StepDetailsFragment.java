@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,9 +77,7 @@ public class StepDetailsFragment extends Fragment {
             mSteps = Parcels.unwrap(savedInstanceState.getParcelable(STEPS_LIST));
             mResumeWindow = savedInstanceState.getInt(RESUME_WINDOW);
             mResumePosition = savedInstanceState.getLong(RESUME_POSITION);
-            Log.d("test123", "onCreateView: 1");
         }
-        Log.d("test123", "onCreateView: " + mResumePosition);
 
         if(mIndex != null && mSteps != null) {
             refreshFragment();
@@ -102,7 +99,6 @@ public class StepDetailsFragment extends Fragment {
         outState.putParcelable(STEPS_LIST, Parcels.wrap(mSteps));
         outState.putInt(RESUME_WINDOW, mResumeWindow);
         outState.putLong(RESUME_POSITION, mResumePosition);
-        Log.d("test123", "onSave: " +mResumePosition);
     }
 
     @Override
@@ -119,13 +115,12 @@ public class StepDetailsFragment extends Fragment {
             mResumePosition = Math.max(0, mExoPlayer.getCurrentPosition());
             releasePlayer();
         }
-        Log.d("test123", "onPause: " +mResumePosition);
     }
 
 
     private void refreshFragment() {
         mStepDescription.setText(mSteps.get(mIndex).getDescription());
-        if(showButtons) { // && getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT
+        if(showButtons && getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             refreshButtons();
         }
         getActivity().setTitle(String.format("%d. %s", mIndex+1, mSteps.get(mIndex).getShortDescription()));
@@ -189,25 +184,20 @@ public class StepDetailsFragment extends Fragment {
                     null,
                     null
             );
-            Log.d("test123", "refreshPlayer: 1");
+
             if(mResumeWindow != C.INDEX_UNSET) {
-                Log.d("test123", "refreshPlayer: " + mResumePosition);
                 mExoPlayer.seekTo(mResumeWindow, mResumePosition);
             }
+
             mExoPlayer.prepare(mediaSource);
             mMediaPlayerView.setVisibility(View.VISIBLE);
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && !getResources().getBoolean(R.bool.isTablet)) {
                 mStepDescription.setVisibility(View.GONE);
             }
-            return;
         }
-        if (currentThumbnailURL != null && !currentThumbnailURL.isEmpty()) {
+        else if (currentThumbnailURL != null && !currentThumbnailURL.isEmpty()) {
             mThumbnailView.setVisibility(View.VISIBLE);
             new loadThumbnail().execute(currentThumbnailURL);
-//            Picasso.with(getActivity())
-//                    .load(currentThumbnailURL)
-//                    .into(mThumbnailView);   // DOESN'T WORK WHEN URL IS VALID, BUT GIVEN RESOURCE IS NOT IMAGE
-//            mThumbnailView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -233,12 +223,9 @@ public class StepDetailsFragment extends Fragment {
         protected void onPostExecute(Bitmap result) {
             if(result == null) {
                 mThumbnailView.setVisibility(View.GONE);
-//                mMediaPlayerView.setDefaultArtwork(null);
             } else {
                 mThumbnailView.setImageBitmap(result);
                 mThumbnailView.setVisibility(View.VISIBLE);
-//                mMediaPlayerView.setDefaultArtwork(result);
-//                mMediaPlayerView.setVisibility(View.VISIBLE);
             }
         }
 

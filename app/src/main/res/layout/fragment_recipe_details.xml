@@ -9,19 +9,19 @@
     <TextView
         android:id="@+id/tv_recipe_ingredients"
         android:background="@color/white"
-        android:padding="12dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp"
-        android:layout_marginTop="2dp"
+        android:padding="@dimen/recipe_details_tv_padding"
+        android:layout_marginLeft="@dimen/recipe_details_margin_lr"
+        android:layout_marginRight="@dimen/recipe_details_margin_lr"
+        android:layout_marginTop="@dimen/recipe_details_margin_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="22sp"
+        android:textSize="@dimen/recipe_details_text_size"
         android:text="@string/ingredients"/>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="@dimen/seperator_view_height"
         android:background="@color/lightBackground"/>
 
     <android.support.v7.widget.RecyclerView

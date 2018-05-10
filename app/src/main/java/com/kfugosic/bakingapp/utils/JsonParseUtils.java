@@ -19,15 +19,15 @@ public class JsonParseUtils {
 
     private static final String JSON_ID = "id";
     private static final String JSON_NAME = "name";
-    public static final String JSON_QUANTITY = "quantity";
-    public static final String JSON_MEASURE = "measure";
-    public static final String JSON_INGREDIENT = "ingredient";
-    public static final String JSON_INGREDIENTS = "ingredients";
-    public static final String JSON_STEPS = "steps";
-    public static final String JSON_SHORT_DESC = "shortDescription";
-    public static final String JSON_DESCRIPTION = "description";
-    public static final String JSON_VIDEO_URL = "videoURL";
-    public static final String JSON_THUMBNAIL_URL = "thumbnailURL";
+    private static final String JSON_QUANTITY = "quantity";
+    private static final String JSON_MEASURE = "measure";
+    private static final String JSON_INGREDIENT = "ingredient";
+    private static final String JSON_INGREDIENTS = "ingredients";
+    private static final String JSON_STEPS = "steps";
+    private static final String JSON_SHORT_DESC = "shortDescription";
+    private static final String JSON_DESCRIPTION = "description";
+    private static final String JSON_VIDEO_URL = "videoURL";
+    private static final String JSON_THUMBNAIL_URL = "thumbnailURL";
 
     public static List<Recipe> parseRecipesJson(String json) {
         List<Recipe> recipes = new ArrayList<>();

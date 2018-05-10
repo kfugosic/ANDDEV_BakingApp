@@ -78,8 +78,8 @@ public class StepDetailsActivityTest {
         onView(withId(R.id.tv_step_desc)).check(matches(withText(secondStepDesc)));
 
         onView(withId(R.id.btn_next)).check(matches(not(isDisplayed())));
-        onView(withId(R.id.btn_previous)).check(matches(isDisplayed()));
 
+        onView(withId(R.id.btn_previous)).check(matches(isDisplayed()));
 
     }
 

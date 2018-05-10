@@ -6,4 +6,7 @@
     <string name="thumbnail">Thumbnail</string>
     <string name="appwidget_default_text">NO RECIPE SELECTED</string>
     <string name="add_widget">Add widget</string>
+    <string name="PREV">PREV</string>
+    <string name="PLAY">PLAY</string>
+    <string name="PAUSE">PAUSE</string>
 </resources>

@@ -38,10 +38,10 @@
                 android:id="@+id/tv_step_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:padding="4dp"
+                android:layout_margin="@dimen/step_details_text_margin"
+                android:padding="@dimen/step_details_text_padding"
                 android:shadowRadius="2"
-                android:textSize="20sp"/>
+                android:textSize="@dimen/step_details_text_size"/>
 
         </LinearLayout>
     </ScrollView>
@@ -55,11 +55,11 @@
         android:layout_alignParentBottom="true"
         android:gravity="center_horizontal"
         android:weightSum="2"
-        android:padding="1dp">
+        android:padding="@dimen/step_details_buttons_padding">
 
         <Button
             android:id="@+id/btn_previous"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/zero_dp"
             android:layout_height="wrap_content"
             android:text="@string/previous"
             android:layout_weight="1"
@@ -67,7 +67,7 @@
 
         <Button
             android:id="@+id/btn_next"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/zero_dp"
             android:layout_height="wrap_content"
             android:text="@string/next"
             android:layout_weight="1"

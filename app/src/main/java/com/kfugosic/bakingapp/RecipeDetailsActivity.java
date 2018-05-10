@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.kfugosic.bakingapp.models.Recipe;
@@ -71,12 +70,10 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeSt
                     fragmentManager.beginTransaction()
                             .add(R.id.step_details_container, ingredientsFragment)
                             .commit();
-                    Log.d(TAG, "setupRecipeDetailsFragment: add");
                 } else {
                     fragmentManager.beginTransaction()
                             .replace(R.id.step_details_container, ingredientsFragment)
                             .commit();
-                    Log.d(TAG, "setupRecipeDetailsFragment: replace");
                 }
             }
         }

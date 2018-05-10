@@ -14,13 +14,14 @@ import com.kfugosic.bakingapp.R;
  */
 
 public class RecipeDetailsFragment extends Fragment {
+
     public RecipeDetailsFragment() {
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.fragment_recipe_details, container, false);
-        return rootView;
+        return inflater.inflate(R.layout.fragment_recipe_details, container, false);
     }
+
 }

@@ -16,6 +16,7 @@ import butterknife.ButterKnife;
 public class IngredientsActivity extends AppCompatActivity {
 
     private static final String ACTIVITY_TITLE = "Ingredients";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

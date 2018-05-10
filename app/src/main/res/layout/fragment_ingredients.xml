@@ -2,6 +2,6 @@
 <TextView android:id="@+id/tv_recipe_ingredients"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:textSize="18sp"
+    android:textSize="@dimen/ingredients_text_size"
     xmlns:android="http://schemas.android.com/apk/res/android" />
 

@@ -162,8 +162,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCardClickLi
         };
     }
 
-
-
     @Override
     public void onLoadFinished(Loader<List<Recipe>> loader, List<Recipe> recipes) {
         if(recipes == null || recipes.isEmpty()) {
@@ -176,7 +174,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCardClickLi
     @Override
     public void onLoaderReset(Loader<List<Recipe>> loader) {
     }
-
 
     private void initializeRecyclerView(List<Recipe> recipes) {
         RecipeCardAdapter adapter = new RecipeCardAdapter(this, recipes);
