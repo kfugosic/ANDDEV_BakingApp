@@ -37,7 +37,6 @@ public class IngredientsActivity extends AppCompatActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        Log.d("TAG", "onNewIntent: " + String.valueOf(intent==null));
         String ingredients = intent.getStringExtra(AppUtils.INGREDIENTS_KEY);
         setupIngredientsFragment(ingredients);
     }
@@ -52,12 +51,10 @@ public class IngredientsActivity extends AppCompatActivity {
                 fragmentManager.beginTransaction()
                         .add(R.id.ingredients_container, ingredientsFragment)
                         .commit();
-                Log.d("TAG", "add");
             } else {
                 fragmentManager.beginTransaction()
                         .replace(R.id.ingredients_container, ingredientsFragment)
                         .commit();
-                Log.d("TAG", "replace");
             }
         }
     }
