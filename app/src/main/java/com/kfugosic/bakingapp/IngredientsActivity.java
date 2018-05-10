@@ -1,9 +1,11 @@
 package com.kfugosic.bakingapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.kfugosic.bakingapp.ui.IngredientsFragment;
@@ -25,18 +27,37 @@ public class IngredientsActivity extends AppCompatActivity {
         }
 
         setTitle(ACTIVITY_TITLE);
-        String ingredients = getIntent().getStringExtra(AppUtils.INGREDIENTS_KEY);
 
         if(savedInstanceState == null) {
+            String ingredients = getIntent().getStringExtra(AppUtils.INGREDIENTS_KEY);
+            setupIngredientsFragment(ingredients);
+        }
+    }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        Log.d("TAG", "onNewIntent: " + String.valueOf(intent==null));
+        String ingredients = intent.getStringExtra(AppUtils.INGREDIENTS_KEY);
+        setupIngredientsFragment(ingredients);
+    }
+
+    private void setupIngredientsFragment(String ingredients) {
+        if(ingredients != null) {
             IngredientsFragment ingredientsFragment = new IngredientsFragment();
             ingredientsFragment.setIngredientsSummary(ingredients);
 
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .addToBackStack("ingr")
-                    .add(R.id.ingredients_container, ingredientsFragment)
-                    .commit();
+            if(fragmentManager.findFragmentById(R.id.ingredients_container) == null){
+                fragmentManager.beginTransaction()
+                        .add(R.id.ingredients_container, ingredientsFragment)
+                        .commit();
+                Log.d("TAG", "add");
+            } else {
+                fragmentManager.beginTransaction()
+                        .replace(R.id.ingredients_container, ingredientsFragment)
+                        .commit();
+                Log.d("TAG", "replace");
+            }
         }
     }
 
@@ -48,4 +69,5 @@ public class IngredientsActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

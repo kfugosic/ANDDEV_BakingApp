@@ -128,6 +128,7 @@ public class StepDetailsFragment extends Fragment {
         if(showButtons) { // && getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT
             refreshButtons();
         }
+        getActivity().setTitle(String.format("%d. %s", mIndex+1, mSteps.get(mIndex).getShortDescription()));
         mStepDescription.setVisibility(View.VISIBLE);
     }
 
@@ -195,7 +196,7 @@ public class StepDetailsFragment extends Fragment {
             }
             mExoPlayer.prepare(mediaSource);
             mMediaPlayerView.setVisibility(View.VISIBLE);
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && !getResources().getBoolean(R.bool.isTablet)) {
                 mStepDescription.setVisibility(View.GONE);
             }
             return;

@@ -54,7 +54,7 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Mo
     public class MovieCardViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener {
         @BindView(R.id.recipe_card_text) TextView recipeNameTextView;
 
-        public MovieCardViewHolder(View itemView) {
+        MovieCardViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             recipeNameTextView.setOnClickListener(this);

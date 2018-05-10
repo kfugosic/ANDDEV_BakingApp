@@ -44,25 +44,33 @@ public class IngredientsWidgetProvider extends AppWidgetProvider {
             headerText = context.getString(R.string.app_name);
             widgetText = context.getString(R.string.appwidget_default_text);
             Intent intent = new Intent(context, MainActivity.class);
-            pendingIntentBody = pendingIntentHeader = PendingIntent.getActivity(context, 0, intent, 0);
+            pendingIntentBody = pendingIntentHeader = PendingIntent.getActivity(context, -1, intent, 0);
 
         } else {
             headerText = currentRecipe.getName();
             widgetText = AppUtils.buildIngredientsSummary(currentRecipe.getIngredients());
+            Intent mainIntent = new Intent(context, MainActivity.class);
+
             Intent recipeIntent = new Intent(context, RecipeDetailsActivity.class);
             recipeIntent.putExtra(AppUtils.RECIPE_KEY, Parcels.wrap(currentRecipe));
-            pendingIntentHeader = PendingIntent.getActivity(context, currentRecipe.getId(), recipeIntent, 0);
+            TaskStackBuilder stackBuilder1 = TaskStackBuilder // not necessary for this project but good to know for future usage.
+                    .create(context)
+                    .addNextIntent(mainIntent)
+                    .addNextIntent(recipeIntent);
+            //pendingIntentHeader = PendingIntent.getActivity(context, currentRecipe.getId(), recipeIntent, 0); //Without stack
+            pendingIntentHeader = stackBuilder1.getPendingIntent(currentRecipe.getId(), PendingIntent.FLAG_UPDATE_CURRENT);
 
             Intent ingridientsIntent = new Intent(context, IngredientsActivity.class);
             ingridientsIntent.putExtra(AppUtils.INGREDIENTS_KEY, widgetText);
-
-            TaskStackBuilder stackBuilder = TaskStackBuilder
+            TaskStackBuilder stackBuilder2 = TaskStackBuilder // not necessary for this project but good to know for future usage.
                     .create(context)
-                    .addNextIntentWithParentStack(recipeIntent)
+                    .addNextIntent(mainIntent)
+                    .addNextIntent(recipeIntent)
                     .addNextIntent(ingridientsIntent);
-            //pendingIntentBody = PendingIntent.getActivity(context, currentRecipe.getId(), intent, 0);
-            pendingIntentBody = stackBuilder.getPendingIntent(currentRecipe.getId(), PendingIntent.FLAG_UPDATE_CURRENT);
+            //pendingIntentBody = PendingIntent.getActivity(context, currentRecipe.getId(), intent, 0); //Without stack
+            pendingIntentBody = stackBuilder2.getPendingIntent(currentRecipe.getId(), PendingIntent.FLAG_UPDATE_CURRENT);
         }
+
         views.setTextViewText(R.id.appwidget_header, headerText);
         views.setTextViewText(R.id.appwidget_text, widgetText);
         views.setOnClickPendingIntent(R.id.appwidget_header, pendingIntentHeader);
@@ -89,5 +97,6 @@ public class IngredientsWidgetProvider extends AppWidgetProvider {
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
     }
+
 }
 

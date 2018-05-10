@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kfugosic.bakingapp.R;
@@ -45,9 +46,9 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
     @Override
     public void onBindViewHolder(StepViewHolder viewHolder, int position) {
         Step current = mSteps.get(position);
-        viewHolder.setRecipeText(current.getShortDescription());
+        viewHolder.setRecipeText(current.getId()+1, current.getShortDescription());
         if (mTwoPane) {
-            viewHolder.recipeStepTextView.setBackgroundColor(selectedPos == position ? AppUtils.SELECTED_COLOR : Color.WHITE);
+            viewHolder.recipeStep.setBackgroundColor(selectedPos == position ? AppUtils.SELECTED_COLOR : Color.WHITE);
         }
     }
 
@@ -61,16 +62,20 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
 
 
     public class StepViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener {
-        @BindView(R.id.tv_recipe_step) TextView recipeStepTextView;
+        @BindView(R.id.tv_recipe_step_number) TextView recipeStepNumberTextView;
+        @BindView(R.id.tv_recipe_step_name) TextView recipeStepNameTextView;
+        @BindView(R.id.step) LinearLayout recipeStep;
 
-        public StepViewHolder(View itemView) {
+
+        StepViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            recipeStepTextView.setOnClickListener(this);
+            recipeStep.setOnClickListener(this);
         }
 
-        private void setRecipeText(String text) {
-            recipeStepTextView.setText(text);
+        private void setRecipeText(int id, String text) {
+            recipeStepNumberTextView.setText(String.valueOf(id));
+            recipeStepNameTextView.setText(text);
         }
 
         @Override

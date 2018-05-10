@@ -6,6 +6,8 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
+import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -13,9 +15,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.widget.Toast;
 
+import com.kfugosic.bakingapp.espresso.SimpleIdlingResource;
 import com.kfugosic.bakingapp.models.Recipe;
 import com.kfugosic.bakingapp.recyclerviews.RecipeCardAdapter;
 import com.kfugosic.bakingapp.recyclerviews.RecipeCardClickListener;
@@ -42,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements RecipeCardClickLi
 
     private Parcelable mLayoutManagerState;
 
+    @Nullable
+    private SimpleIdlingResource mIdlingResource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +132,9 @@ public class MainActivity extends AppCompatActivity implements RecipeCardClickLi
             @Override
             protected void onStartLoading() {
                 super.onStartLoading();
+                if (mIdlingResource != null) {
+                    mIdlingResource.setIdleState(false);
+                }
                 if(mQueryResults == null) {
                     forceLoad();
                     return;
@@ -147,6 +154,9 @@ public class MainActivity extends AppCompatActivity implements RecipeCardClickLi
             @Override
             public void deliverResult(List<Recipe> data) {
                 mQueryResults = data;
+                if (mIdlingResource != null) {
+                    mIdlingResource.setIdleState(true);
+                }
                 super.deliverResult(data);
             }
         };
@@ -175,5 +185,18 @@ public class MainActivity extends AppCompatActivity implements RecipeCardClickLi
         if(mLayoutManagerState != null) {
             mRecipesRecyclerView.getLayoutManager().onRestoreInstanceState(mLayoutManagerState);
         }
+    }
+
+    //
+    //
+    // ESPRESSO
+    //
+    //
+
+    public IdlingResource getIdlingResource() {
+        if (mIdlingResource == null) {
+            mIdlingResource = new SimpleIdlingResource();
+        }
+        return mIdlingResource;
     }
 }

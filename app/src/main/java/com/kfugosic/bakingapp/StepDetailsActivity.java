@@ -25,6 +25,7 @@ public class StepDetailsActivity extends AppCompatActivity {
         if(getIntent() == null){
             return;
         }
+
         int index = getIntent().getIntExtra(AppUtils.CURRENT_STEP_INDEX_KEY, -1);
         ArrayList<Step> steps = Parcels.unwrap(getIntent().getParcelableExtra(AppUtils.ALL_STEPS_KEY));
 

@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.kfugosic.bakingapp.models.Recipe;
@@ -32,6 +33,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeSt
     @BindView(R.id.tv_recipe_ingredients) protected TextView mRecipeIngredients;
 
     private static final String INSTANCE_STATE_RV_POSITION_KEY = "rv_steps_position";
+    private static final String TAG = "test123";
 
     private Parcelable mLayoutManagerState;
     private ArrayList<Step> mSteps;
@@ -41,46 +43,65 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeSt
     private boolean mTwoPane;
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        Recipe selectedRecipe = Parcels.unwrap(getIntent().getParcelableExtra(AppUtils.RECIPE_KEY));
+        setupRecipeDetailsFragment(selectedRecipe);
+    }
+
+    private void setupRecipeDetailsFragment(Recipe selectedRecipe) {
+        if(selectedRecipe != null) {
+            setTitle(selectedRecipe.getName());
+            mSteps = (ArrayList<Step>) selectedRecipe.getSteps();
+            mIngredients = AppUtils.buildIngredientsSummary(selectedRecipe.getIngredients());
+
+            LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+            mRecipeSteps.setLayoutManager(layoutManager);
+            mRecipeSteps.setHasFixedSize(true);
+            mRecipeSteps.setItemAnimator(null);
+            mAdapter = new RecipeStepsAdapter(this, mSteps, mTwoPane);
+            mRecipeSteps.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
+
+            if(mTwoPane) {
+                IngredientsFragment ingredientsFragment = new IngredientsFragment();
+                ingredientsFragment.setIngredientsSummary(mIngredients);
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                if(fragmentManager.findFragmentById(R.id.step_details_container) == null){
+                    fragmentManager.beginTransaction()
+                            .add(R.id.step_details_container, ingredientsFragment)
+                            .commit();
+                    Log.d(TAG, "setupRecipeDetailsFragment: add");
+                } else {
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.step_details_container, ingredientsFragment)
+                            .commit();
+                    Log.d(TAG, "setupRecipeDetailsFragment: replace");
+                }
+            }
+        }
+    }
+
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_details);
         ButterKnife.bind(this);
 
-        Recipe selectedRecipe = Parcels.unwrap(getIntent().getParcelableExtra(AppUtils.RECIPE_KEY));
-        if(selectedRecipe == null) {
-            return;
-        }
-
-        setTitle(selectedRecipe.getName());
-        mSteps = (ArrayList<Step>) selectedRecipe.getSteps();
-        mIngredients = AppUtils.buildIngredientsSummary(selectedRecipe.getIngredients());
-
-        if(savedInstanceState != null) {
-            mLayoutManagerState = savedInstanceState.getParcelable(INSTANCE_STATE_RV_POSITION_KEY);
-        }
-
         if(findViewById(R.id.step_details_container) != null) {
             mTwoPane = true;
-            if(savedInstanceState == null) {
-                IngredientsFragment ingredientsFragment = new IngredientsFragment();
-                ingredientsFragment.setIngredientsSummary(mIngredients);
-
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .addToBackStack("recipe")
-                        .add(R.id.step_details_container, ingredientsFragment)
-                        .commit();
-            }
         } else {
             mTwoPane = false;
         }
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mRecipeSteps.setLayoutManager(layoutManager);
-        mRecipeSteps.setHasFixedSize(true);
-        mRecipeSteps.setItemAnimator(null);
-        mAdapter = new RecipeStepsAdapter(this, mSteps, mTwoPane);
-        mRecipeSteps.setAdapter(mAdapter);
+        Recipe selectedRecipe = Parcels.unwrap(getIntent().getParcelableExtra(AppUtils.RECIPE_KEY));
+        setupRecipeDetailsFragment(selectedRecipe);
+
+        if(savedInstanceState != null) {
+            mLayoutManagerState = savedInstanceState.getParcelable(INSTANCE_STATE_RV_POSITION_KEY);
+            mRecipeSteps.getLayoutManager().onRestoreInstanceState(mLayoutManagerState);
+        }
 
     }
 
@@ -135,7 +156,9 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeSt
     @Override
     protected void onPause() {
         super.onPause();
-        mLayoutManagerState = mRecipeSteps.getLayoutManager().onSaveInstanceState();
+        if(mRecipeSteps != null) {
+            mLayoutManagerState = mRecipeSteps.getLayoutManager().onSaveInstanceState();
+        }
     }
 
     @Override

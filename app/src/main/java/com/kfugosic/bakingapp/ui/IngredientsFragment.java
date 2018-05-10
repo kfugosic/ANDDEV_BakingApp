@@ -58,7 +58,7 @@ public class IngredientsFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.equals(android.R.id.home)) {
+        if(item.getItemId() == android.R.id.home) {
             NavUtils.navigateUpFromSameTask(getActivity());
             return true;
         }
