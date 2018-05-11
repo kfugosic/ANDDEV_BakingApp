@@ -185,17 +185,18 @@ public class StepDetailsFragment extends Fragment {
                     null
             );
 
+            mExoPlayer.prepare(mediaSource);
+
             if(mResumeWindow != C.INDEX_UNSET) {
                 mExoPlayer.seekTo(mResumeWindow, mResumePosition);
             }
 
-            mExoPlayer.prepare(mediaSource);
             mMediaPlayerView.setVisibility(View.VISIBLE);
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && !getResources().getBoolean(R.bool.isTablet)) {
                 mStepDescription.setVisibility(View.GONE);
             }
         }
-        else if (currentThumbnailURL != null && !currentThumbnailURL.isEmpty()) {
+        if (currentThumbnailURL != null && !currentThumbnailURL.isEmpty()) {
             mThumbnailView.setVisibility(View.VISIBLE);
             new loadThumbnail().execute(currentThumbnailURL);
         }
