@@ -26,6 +26,7 @@
                 android:id="@+id/recipe_card_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="@dimen/recipe_card_name_margin"
                 android:gravity="center"
                 android:textSize="@dimen/recipe_card_text_size" />
 
