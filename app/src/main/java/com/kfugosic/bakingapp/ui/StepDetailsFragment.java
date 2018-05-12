@@ -1,12 +1,11 @@
 package com.kfugosic.bakingapp.ui;
 
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,11 +26,10 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.kfugosic.bakingapp.R;
 import com.kfugosic.bakingapp.models.Step;
-import com.squareup.picasso.Picasso;
+import com.kfugosic.bakingapp.utils.LoadImageIntoViewTask;
 
 import org.parceler.Parcels;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -47,6 +45,7 @@ public class StepDetailsFragment extends Fragment {
 
     private final String RESUME_WINDOW = "resume_window";
     private final String RESUME_POSITION = "resume_position";
+    private final String RESUME_PLAY_STATE = "resume_play_state";
     private static final String STEPS_LIST = "steps_list";
     public static final String STEP_INDEX = "step_index";
 
@@ -62,6 +61,7 @@ public class StepDetailsFragment extends Fragment {
     private boolean showButtons = true;
     private int mResumeWindow;
     private long mResumePosition;
+    private boolean mResumePlayState;
 
     public StepDetailsFragment() {
     }
@@ -77,6 +77,7 @@ public class StepDetailsFragment extends Fragment {
             mSteps = Parcels.unwrap(savedInstanceState.getParcelable(STEPS_LIST));
             mResumeWindow = savedInstanceState.getInt(RESUME_WINDOW);
             mResumePosition = savedInstanceState.getLong(RESUME_POSITION);
+            mResumePlayState = savedInstanceState.getBoolean(RESUME_PLAY_STATE);
         }
 
         if(mIndex != null && mSteps != null) {
@@ -94,14 +95,6 @@ public class StepDetailsFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(STEP_INDEX, mIndex);
-        outState.putParcelable(STEPS_LIST, Parcels.wrap(mSteps));
-        outState.putInt(RESUME_WINDOW, mResumeWindow);
-        outState.putLong(RESUME_POSITION, mResumePosition);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         refreshPlayer();
@@ -113,10 +106,19 @@ public class StepDetailsFragment extends Fragment {
         if(mExoPlayer != null) {
             mResumeWindow = mExoPlayer.getCurrentWindowIndex();
             mResumePosition = Math.max(0, mExoPlayer.getCurrentPosition());
+            mResumePlayState = mExoPlayer.getPlayWhenReady();
             releasePlayer();
         }
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(STEP_INDEX, mIndex);
+        outState.putParcelable(STEPS_LIST, Parcels.wrap(mSteps));
+        outState.putInt(RESUME_WINDOW, mResumeWindow);
+        outState.putLong(RESUME_POSITION, mResumePosition);
+        outState.putBoolean(RESUME_PLAY_STATE, mResumePlayState);
+    }
 
     private void refreshFragment() {
         mStepDescription.setText(mSteps.get(mIndex).getDescription());
@@ -142,6 +144,7 @@ public class StepDetailsFragment extends Fragment {
     protected void showPrevious() {
         mIndex -= 1;
         refreshFragment();
+        releasePlayer();
         refreshPlayer();
     }
 
@@ -149,6 +152,7 @@ public class StepDetailsFragment extends Fragment {
     protected void showNext() {
         mIndex += 1;
         refreshFragment();
+        releasePlayer();
         refreshPlayer();
     }
 
@@ -171,7 +175,7 @@ public class StepDetailsFragment extends Fragment {
         mMediaPlayerView.setVisibility(View.GONE);
         mThumbnailView.setVisibility(View.GONE);
 
-        if (currentVideoURL != null && !currentVideoURL.isEmpty()) {
+        if (!TextUtils.isEmpty(currentVideoURL)) {
             if(mExoPlayer == null) {
                 mExoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), new DefaultTrackSelector(), new DefaultLoadControl());
                 mExoPlayer.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
@@ -190,6 +194,7 @@ public class StepDetailsFragment extends Fragment {
             if(mResumeWindow != C.INDEX_UNSET) {
                 mExoPlayer.seekTo(mResumeWindow, mResumePosition);
             }
+            mExoPlayer.setPlayWhenReady(mResumePlayState);
 
             mMediaPlayerView.setVisibility(View.VISIBLE);
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && !getResources().getBoolean(R.bool.isTablet)) {
@@ -198,44 +203,15 @@ public class StepDetailsFragment extends Fragment {
         }
         if (currentThumbnailURL != null && !currentThumbnailURL.isEmpty()) {
             mThumbnailView.setVisibility(View.VISIBLE);
-            new loadThumbnail().execute(currentThumbnailURL);
+            new LoadImageIntoViewTask(getActivity(), mThumbnailView).execute(currentThumbnailURL);
         }
     }
 
     private void releasePlayer() {
-        mExoPlayer.stop();
-        mExoPlayer.release();
-        mExoPlayer = null;
-    }
-
-    private class loadThumbnail extends AsyncTask<String, Void, Bitmap> {
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            try {
-                return Picasso.with(getActivity())
-                        .load(params[0])
-                        .get();
-            } catch (IOException e) {
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            if(result == null) {
-                mThumbnailView.setVisibility(View.GONE);
-            } else {
-                mThumbnailView.setImageBitmap(result);
-                mThumbnailView.setVisibility(View.VISIBLE);
-            }
-        }
-
-        @Override
-        protected void onPreExecute() {
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
+        if (mExoPlayer != null) {
+            mExoPlayer.stop();
+            mExoPlayer.release();
+            mExoPlayer = null;
         }
     }
 

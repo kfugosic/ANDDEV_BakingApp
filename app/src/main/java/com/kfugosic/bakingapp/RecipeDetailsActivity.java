@@ -86,11 +86,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeSt
         setContentView(R.layout.activity_recipe_details);
         ButterKnife.bind(this);
 
-        if(findViewById(R.id.step_details_container) != null) {
-            mTwoPane = true;
-        } else {
-            mTwoPane = false;
-        }
+        mTwoPane = getResources().getBoolean(R.bool.isTablet);
 
         Recipe selectedRecipe = Parcels.unwrap(getIntent().getParcelableExtra(AppUtils.RECIPE_KEY));
         setupRecipeDetailsFragment(selectedRecipe);

@@ -9,4 +9,5 @@
     <string name="PREV">PREV</string>
     <string name="PLAY">PLAY</string>
     <string name="PAUSE">PAUSE</string>
+    <string name="thumbnail_content_description">Thumbnail</string>
 </resources>

@@ -36,5 +36,7 @@ http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     <dimen name="recipe_step_text_padding">12dp</dimen>
     <dimen name="recipe_step_text_margin">2dp</dimen>
     <dimen name="recipe_step_text_size">22sp</dimen>
+    <dimen name="recipe_card_thumbnail_margin">8dp</dimen>
+    <dimen name="recipe_card_thumbnail_border_padding">2dp</dimen>
 
 </resources>

@@ -24,6 +24,8 @@ public class JsonParseUtils {
     private static final String JSON_INGREDIENT = "ingredient";
     private static final String JSON_INGREDIENTS = "ingredients";
     private static final String JSON_STEPS = "steps";
+    private static final String JSON_SERVINGS = "servings";
+    private static final String JSON_IMAGE = "image";
     private static final String JSON_SHORT_DESC = "shortDescription";
     private static final String JSON_DESCRIPTION = "description";
     private static final String JSON_VIDEO_URL = "videoURL";
@@ -42,7 +44,9 @@ public class JsonParseUtils {
                 String name = currentRecipe.optString(JSON_NAME);
                 List<Ingredient> ingredientList = parseIngredients(currentRecipe.optJSONArray(JSON_INGREDIENTS));
                 List<Step> stepsList = parseSteps(currentRecipe.optJSONArray(JSON_STEPS));
-                Recipe newRecipe = new Recipe(id, name, ingredientList, stepsList);
+                int servings = currentRecipe.optInt(JSON_SERVINGS);
+                String image = currentRecipe.optString(JSON_IMAGE);
+                Recipe newRecipe = new Recipe(id, name, ingredientList, stepsList, servings, image);
                 recipes.add(newRecipe);
             }
         } catch (JSONException e) {

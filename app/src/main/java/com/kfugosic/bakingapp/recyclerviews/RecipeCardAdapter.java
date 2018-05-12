@@ -1,13 +1,17 @@
 package com.kfugosic.bakingapp.recyclerviews;
 
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kfugosic.bakingapp.R;
 import com.kfugosic.bakingapp.models.Recipe;
+import com.kfugosic.bakingapp.utils.LoadImageIntoViewTask;
 
 import java.util.List;
 
@@ -40,6 +44,7 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Mo
     public void onBindViewHolder(MovieCardViewHolder holder, int position) {
         Recipe current = mRecipes.get(position);
         holder.setRecipeText(current.getName());
+        holder.loadThumbnail(current.getImage());
     }
 
     @Override
@@ -52,16 +57,25 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Mo
 
 
     public class MovieCardViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener {
+        @BindView(R.id.recipe_card_view) CardView recipeCardView;
         @BindView(R.id.recipe_card_text) TextView recipeNameTextView;
+        @BindView(R.id.recipe_card_thumbnail) ImageView recipeThumbnailImageView;
 
         MovieCardViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            recipeNameTextView.setOnClickListener(this);
+            recipeCardView.setOnClickListener(this);
         }
 
         private void setRecipeText(String text) {
             recipeNameTextView.setText(text);
+        }
+
+        private void loadThumbnail(String imageUrl) {
+            if(!TextUtils.isEmpty(imageUrl)) {
+                new LoadImageIntoViewTask(itemView.getContext(), recipeThumbnailImageView)
+                        .execute(imageUrl);
+            }
         }
 
         @Override
